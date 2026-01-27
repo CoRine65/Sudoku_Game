@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  game_session: one
+  row: 1
+  col: 1
+  value: 1
+  previous_value: 1
+  action: MyString
+  move_number: 1
+
+two:
+  game_session: two
+  row: 1
+  col: 1
+  value: 1
+  previous_value: 1
+  action: MyString
+  move_number: 1
