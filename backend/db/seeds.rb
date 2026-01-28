@@ -7,3 +7,17 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+require "json"
+
+path = Rails.root.join("db", "seeds", "puzzles.json")
+puzzles = JSON.parse(File.read(path))
+
+puzzles.each do |p|
+  Puzzle.create!(
+    difficulty: p.fetch("difficulty"),
+    given_board: p.fetch("given_board"),
+    solution_board: p.fetch("solution_board")
+  )
+end
+
+puts "Seeded #{puzzles.length} puzzles."
