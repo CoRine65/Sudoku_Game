@@ -8,4 +8,13 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  
+  get "/me", to: "users#me"
+
+  resources :puzzles, only: [:index, :show]
+
+  resources :game_sessions, only: [:index, :show, :create, :update] do
+    resources :moves, only: [:index, :create]
+  end
+
 end
