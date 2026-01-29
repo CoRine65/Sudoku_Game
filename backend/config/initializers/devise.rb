@@ -47,6 +47,7 @@ Devise.setup do |config|
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
   # config.authentication_keys = [:email]
+  config.params_authenticatable = [:database]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -307,6 +308,8 @@ Devise.setup do |config|
   # Note: These might become the new default in future versions of Devise.
   config.responder.error_status = :unprocessable_content
   config.responder.redirect_status = :see_other
+
+  config.navigational_formats = ['*/*', :json]
 
   # ==> Configuration for :registerable
 
