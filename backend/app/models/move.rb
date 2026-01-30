@@ -5,8 +5,8 @@ class Move < ApplicationRecord
 
   validates :row, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 9 }
   validates :col, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 9 }
-  validates :action, presence: true, inclusion: { in: ACTIONS }
-  validates :move_number, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  #validates :action, presence: true, inclusion: { in: ACTIONS }
+  #validates :move_number, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   validate :value_matches_action
   validate :cannot_target_given_cell

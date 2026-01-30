@@ -3,6 +3,8 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /users/sign_in
   def create
+    Rails.logger.debug "RAW BODY: #{request.raw_post}"
+    Rails.logger.debug "PARAMS: #{params.to_unsafe_h}"
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
 

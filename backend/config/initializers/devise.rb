@@ -309,7 +309,7 @@ Devise.setup do |config|
   config.responder.error_status = :unprocessable_content
   config.responder.redirect_status = :see_other
 
-  config.navigational_formats = ['*/*', :json]
+  config.navigational_formats = []
 
   # ==> Configuration for :registerable
 
