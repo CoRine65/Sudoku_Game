@@ -1,8 +1,24 @@
 // src/pages/SudokuGamePage.jsx
+import { useState } from "react";
 import SudokuBoard from "../components/SudokuBoard";
 import "./SudokuGamePage.css";
 
 export default function SudokuGamePage() {
+  // eslint-disable-next-line no-unused-vars
+  const [playerBoard, setPlayerBoard] = useState([
+    [5, 3, "", "", 7, "", "", "", ""],
+    [6, "", "", 1, 9, 5, "", "", ""],
+    ["", 9, 8, "", "", "", "", 6, ""],
+    [8, "", "", "", 6, "", "", "", 3],
+    [4, "", "", 8, "", 3, "", "", 1],
+    [7, "", "", "", 2, "", "", "", 6],
+    ["", 6, "", "", "", "", 2, 8, ""],
+    ["", "", "", 4, 1, 9, "", "", 5],
+    ["", "", "", "", 8, "", "", 7, 9],
+  ]);
+  
+  const [selectedCell, setSelectedCell] = useState(null);
+
   return (
     <main className="game-page">
       <section className="side-panel">
@@ -14,7 +30,10 @@ export default function SudokuGamePage() {
           </div>
         </div>
 
-        <SudokuBoard />
+      <SudokuBoard
+        board={playerBoard}
+        selectedCell={selectedCell}
+        setSelectedCell={setSelectedCell}/>
       </section>
 
       <section className="control-panel">

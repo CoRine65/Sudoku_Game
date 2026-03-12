@@ -1,27 +1,39 @@
-// src/components/SudokuBoard.jsx
-export default function SudokuBoard() {
-  const cells = Array.from({ length: 81 }, (_, index) => index);
+export default function SudokuBoard({ board, selectedCell, setSelectedCell }) {
+  const cells = Array.from({ length: 81 }, (_, index) => {
+    const row = Math.floor(index / 9);
+    const col = index % 9;
+    const value = board?.[row]?.[col] ?? "";
+
+    const isSelected =
+      selectedCell?.row === row && selectedCell?.col === col;
+
+    const classes = [
+      "cell",
+      col % 3 === 0 ? "thick-left" : "",
+      row % 3 === 0 ? "thick-top" : "",
+      isSelected ? "selected" : "",
+    ].join(" ");
+
+    return {
+      index,
+      row,
+      col,
+      value,
+      classes,
+    };
+  });
 
   return (
     <div className="sudoku-board">
-      {cells.map((cell) => {
-        const row = Math.floor(cell / 9);
-        const col = cell % 9;
-
-        const classes = [
-          "cell",
-          col % 3 === 0 ? "thick-left" : "",
-          row % 3 === 0 ? "thick-top" : "",
-          col === 8 ? "thick-right" : "",
-          row === 8 ? "thick-bottom" : "",
-        ].join(" ");
-
-        return (
-          <div key={cell} className={classes}>
-            {/* placeholder */}
-          </div>
-        );
-      })}
+      {cells.map((cell) => (
+        <div
+          key={cell.index}
+          className={cell.classes}
+          onClick={() => setSelectedCell?.({ row: cell.row, col: cell.col })}
+        >
+          {cell.value}
+        </div>
+      ))}
     </div>
   );
 }

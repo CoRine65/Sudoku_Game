@@ -69,3 +69,7 @@
 .control-panel button:hover {
   background: #f2f2f2;
 }
+
+.cell.selected {
+  background-color: #e8e1d4;
+}
