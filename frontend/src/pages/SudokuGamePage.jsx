@@ -16,6 +16,12 @@ export default function SudokuGamePage() {
   ]);
 
   const [selectedCell, setSelectedCell] = useState(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [gameSessionId, setGameSessionId] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [givenBoard, setGivenBoard] = useState([]);
+
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -47,6 +53,51 @@ export default function SudokuGamePage() {
     };
   }, [selectedCell]);
 
+  async function handleStartGame() {
+  const difficultyToPuzzleId = {
+    easy: 1,
+    medium: 2,
+  };
+
+  const puzzleId = difficultyToPuzzleId[selectedDifficulty];
+
+  if (!puzzleId) {
+    alert("Please choose a difficulty first.");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:3000/game_sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        puzzle_id: puzzleId,
+      }),
+    });
+
+    const data = await response.json();
+
+    const normalizedBoard = data.current_board.map((row) =>
+      row.map((cell) => cell ?? "")
+    );
+
+    const normalizedGivenBoard = data.puzzle.given_board.map((row) =>
+      row.map((cell) => cell ?? "")
+    );
+
+    setGameSessionId(data.id);
+    setPlayerBoard(normalizedBoard);
+    setGivenBoard(normalizedGivenBoard);
+    setSelectedCell(null);
+  } catch (error) {
+    console.error("Error starting game:", error);
+    }
+  }
+
   return (
     <main className="game-page">
       <section className="side-panel">
@@ -70,7 +121,11 @@ export default function SudokuGamePage() {
 
         <div className="difficulty-group">
           <label htmlFor="difficulty">Difficulty</label>
-          <select id="difficulty" name="difficulty">
+          <select
+            id="difficulty"
+            name="difficulty"
+            value={selectedDifficulty}
+            onChange={(event) => setSelectedDifficulty(event.target.value)}>
             <option value="">Choose difficulty</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
@@ -78,7 +133,9 @@ export default function SudokuGamePage() {
           </select>
         </div>
 
-        <button className="start-btn">Start Game</button>
+        <button className="start-btn" onClick={handleStartGame}>
+          Start Game
+        </button>
       </section>
 
       <section className="side-panel">
