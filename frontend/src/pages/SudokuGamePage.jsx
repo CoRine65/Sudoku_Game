@@ -28,6 +28,10 @@ export default function SudokuGamePage() {
       if (!selectedCell) return;
 
       const { row, col } = selectedCell;
+      const isGiven =
+      givenBoard?.[row]?.[col] !== "" && givenBoard?.[row]?.[col] != null;
+
+      if (isGiven) return;
 
       if (event.key >= "1" && event.key <= "9") {
         setPlayerBoard((prevBoard) => {
@@ -51,7 +55,7 @@ export default function SudokuGamePage() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedCell]);
+  }, [selectedCell, givenBoard]);
 
   async function handleStartGame() {
   const difficultyToPuzzleId = {
@@ -111,6 +115,7 @@ export default function SudokuGamePage() {
 
         <SudokuBoard
           board={playerBoard}
+          givenBoard={givenBoard}
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
         />

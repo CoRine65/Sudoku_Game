@@ -1,9 +1,10 @@
-export default function SudokuBoard({ board, selectedCell, setSelectedCell }) {
+export default function SudokuBoard({ board, selectedCell, setSelectedCell, givenBoard = [] }) {
   const cells = Array.from({ length: 81 }, (_, index) => {
     const row = Math.floor(index / 9);
     const col = index % 9;
     const value = board?.[row]?.[col] ?? "";
 
+    const isGiven = givenBoard?.[row]?.[col] !== "" && givenBoard?.[row]?.[col] != null;
     const isSelected =
       selectedCell?.row === row && selectedCell?.col === col;
 
@@ -19,6 +20,7 @@ export default function SudokuBoard({ board, selectedCell, setSelectedCell }) {
       row,
       col,
       value,
+      isGiven,
       classes,
     };
   });
@@ -29,7 +31,10 @@ export default function SudokuBoard({ board, selectedCell, setSelectedCell }) {
         <div
           key={cell.index}
           className={cell.classes}
-          onClick={() => setSelectedCell?.({ row: cell.row, col: cell.col })}
+          onClick={() => {
+            if (cell.isGiven) return;
+            setSelectedCell?.({ row: cell.row, col: cell.col });
+          }}
         >
           {cell.value}
         </div>

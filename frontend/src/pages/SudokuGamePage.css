@@ -73,3 +73,15 @@
 .cell.selected {
   background-color: #e8e1d4;
 }
+
+/* selected cells */
+.cell.given-cell {
+  background-color: #f3eee6;
+  font-weight: 700;
+  color: #2f2a24;
+  cursor: default;
+}
+
+.cell.selected {
+  background-color: #e8e1d4;
+}
