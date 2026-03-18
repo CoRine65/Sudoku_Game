@@ -18,10 +18,95 @@ export default function SudokuGamePage() {
   const [selectedCell, setSelectedCell] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   // eslint-disable-next-line no-unused-vars
-  const [gameSessionId, setGameSessionId] = useState(null);
-  // eslint-disable-next-line no-unused-vars
+  const [gameSsessionId, setGameSessionId] = useState(null);
   const [givenBoard, setGivenBoard] = useState([]);
+  const [invalidCells, setInvalidCells] = useState([]);
 
+  function getInvalidCells(board) {
+    const invalid = [];
+
+    function markInvalid(row, col) {
+      const alreadyMarked = invalid.some(
+        (cell) => cell.row === row && cell.col === col
+      );
+
+      if (!alreadyMarked) {
+        invalid.push({ row, col });
+      }
+    }
+
+    // Check rows
+    for (let row = 0; row < 9; row++) {
+      const seen = {};
+
+      for (let col = 0; col < 9; col++) {
+        const value = board[row][col];
+        if (value === "") continue;
+
+        if (!seen[value]) {
+          seen[value] = [{ row, col }];
+        } else {
+          seen[value].push({ row, col });
+        }
+      }
+
+      Object.values(seen).forEach((cells) => {
+        if (cells.length > 1) {
+          cells.forEach((cell) => markInvalid(cell.row, cell.col));
+        }
+      });
+    }
+
+    // Check columns
+    for (let col = 0; col < 9; col++) {
+      const seen = {};
+
+      for (let row = 0; row < 9; row++) {
+        const value = board[row][col];
+        if (value === "") continue;
+
+        if (!seen[value]) {
+          seen[value] = [{ row, col }];
+        } else {
+          seen[value].push({ row, col });
+        }
+      }
+
+      Object.values(seen).forEach((cells) => {
+        if (cells.length > 1) {
+          cells.forEach((cell) => markInvalid(cell.row, cell.col));
+        }
+      });
+    }
+
+    // Check 3x3 boxes
+    for (let boxRow = 0; boxRow < 3; boxRow++) {
+      for (let boxCol = 0; boxCol < 3; boxCol++) {
+        const seen = {};
+
+        for (let row = boxRow * 3; row < boxRow * 3 + 3; row++) {
+          for (let col = boxCol * 3; col < boxCol * 3 + 3; col++) {
+            const value = board[row][col];
+            if (value === "") continue;
+
+            if (!seen[value]) {
+              seen[value] = [{ row, col }];
+            } else {
+              seen[value].push({ row, col });
+            }
+          }
+        }
+
+        Object.values(seen).forEach((cells) => {
+          if (cells.length > 1) {
+            cells.forEach((cell) => markInvalid(cell.row, cell.col));
+          }
+        });
+      }
+    }
+
+    return invalid;
+  }
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -29,7 +114,7 @@ export default function SudokuGamePage() {
 
       const { row, col } = selectedCell;
       const isGiven =
-      givenBoard?.[row]?.[col] !== "" && givenBoard?.[row]?.[col] != null;
+        givenBoard?.[row]?.[col] !== "" && givenBoard?.[row]?.[col] != null;
 
       if (isGiven) return;
 
@@ -37,6 +122,8 @@ export default function SudokuGamePage() {
         setPlayerBoard((prevBoard) => {
           const newBoard = prevBoard.map((currentRow) => [...currentRow]);
           newBoard[row][col] = Number(event.key);
+
+          setInvalidCells(getInvalidCells(newBoard));
           return newBoard;
         });
       }
@@ -45,6 +132,8 @@ export default function SudokuGamePage() {
         setPlayerBoard((prevBoard) => {
           const newBoard = prevBoard.map((currentRow) => [...currentRow]);
           newBoard[row][col] = "";
+
+          setInvalidCells(getInvalidCells(newBoard));
           return newBoard;
         });
       }
@@ -58,47 +147,48 @@ export default function SudokuGamePage() {
   }, [selectedCell, givenBoard]);
 
   async function handleStartGame() {
-  const difficultyToPuzzleId = {
-    easy: 1,
-    medium: 2,
-  };
+    const difficultyToPuzzleId = {
+      easy: 1,
+      medium: 2,
+    };
 
-  const puzzleId = difficultyToPuzzleId[selectedDifficulty];
+    const puzzleId = difficultyToPuzzleId[selectedDifficulty];
 
-  if (!puzzleId) {
-    alert("Please choose a difficulty first.");
-    return;
-  }
+    if (!puzzleId) {
+      alert("Please choose a difficulty first.");
+      return;
+    }
 
-  try {
-    const response = await fetch("http://localhost:3000/game_sessions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        puzzle_id: puzzleId,
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:3000/game_sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          puzzle_id: puzzleId,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    const normalizedBoard = data.current_board.map((row) =>
-      row.map((cell) => cell ?? "")
-    );
+      const normalizedBoard = data.current_board.map((row) =>
+        row.map((cell) => cell ?? "")
+      );
 
-    const normalizedGivenBoard = data.puzzle.given_board.map((row) =>
-      row.map((cell) => cell ?? "")
-    );
+      const normalizedGivenBoard = data.puzzle.given_board.map((row) =>
+        row.map((cell) => cell ?? "")
+      );
 
-    setGameSessionId(data.id);
-    setPlayerBoard(normalizedBoard);
-    setGivenBoard(normalizedGivenBoard);
-    setSelectedCell(null);
-  } catch (error) {
-    console.error("Error starting game:", error);
+      setGameSessionId(data.id);
+      setPlayerBoard(normalizedBoard);
+      setGivenBoard(normalizedGivenBoard);
+      setInvalidCells(getInvalidCells(normalizedBoard));
+      setSelectedCell(null);
+    } catch (error) {
+      console.error("Error starting game:", error);
     }
   }
 
@@ -118,6 +208,7 @@ export default function SudokuGamePage() {
           givenBoard={givenBoard}
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
+          invalidCells={invalidCells}
         />
       </section>
 
@@ -130,7 +221,8 @@ export default function SudokuGamePage() {
             id="difficulty"
             name="difficulty"
             value={selectedDifficulty}
-            onChange={(event) => setSelectedDifficulty(event.target.value)}>
+            onChange={(event) => setSelectedDifficulty(event.target.value)}
+          >
             <option value="">Choose difficulty</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>

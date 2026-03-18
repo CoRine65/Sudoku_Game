@@ -85,3 +85,20 @@
 .cell.selected {
   background-color: #e8e1d4;
 }
+
+.highlighted {
+  background-color: rgba(255, 255, 0, 0.18);
+}
+
+.selected {
+  background-color: rgba(255, 200, 0, 0.4);
+}
+
+.given {
+  font-weight: bold;
+}
+
+.invalid {
+  color: #c62828;
+  background-color: rgba(198, 40, 40, 0.12);
+}
