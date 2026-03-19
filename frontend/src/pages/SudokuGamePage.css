@@ -46,7 +46,6 @@
   gap: 0.75rem;
 }
 
-/* Shared control styles */
 .control-panel button,
 .difficulty-group select {
   width: 160px;
@@ -59,46 +58,92 @@
   color: #333;
 }
 
-/* Center dropdown text */
 .difficulty-group select {
   text-align: center;
   text-align-last: center;
 }
 
-/* Hover only for buttons */
 .control-panel button:hover {
   background: #f2f2f2;
 }
 
-.cell.selected {
-  background-color: #e8e1d4;
+/* Sudoku board */
+
+.sudoku-board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: 540px;
+  height: 540px;
+  border: 3px solid #444;
+  background-color: #f8f8f8;
 }
 
-/* selected cells */
-.cell.given-cell {
-  background-color: #f3eee6;
-  font-weight: 700;
-  color: #2f2a24;
-  cursor: default;
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid #b9b9b9;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #222;
+  user-select: none;
+  cursor: pointer;
 }
 
-.cell.selected {
-  background-color: #e8e1d4;
+.thick-left {
+  border-left: 3px solid #444;
 }
 
-.highlighted {
-  background-color: rgba(255, 255, 0, 0.18);
-}
-
-.selected {
-  background-color: rgba(255, 200, 0, 0.4);
+.thick-top {
+  border-top: 3px solid #444;
 }
 
 .given {
-  font-weight: bold;
+  font-weight: 700;
+  color: #2b2b2b;
+}
+
+.highlighted {
+  background-color: rgba(255, 220, 120, 0.18);
+}
+
+.same-value {
+  background-color: rgba(120, 170, 255, 0.22);
+}
+
+.selected {
+  background-color: rgba(255, 200, 0, 0.35);
 }
 
 .invalid {
-  color: #c62828;
-  background-color: rgba(198, 40, 40, 0.12);
+  background-color: rgba(198, 40, 40, 0.14);
+  color: #b3261e;
+}
+
+.win-message {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2e7d32;
+  text-align: center;
+}
+
+.number-tracker {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.tracker-number {
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.tracker-number.complete {
+  color: #888;
+  text-decoration: line-through;
+  opacity: 0.7;
 }

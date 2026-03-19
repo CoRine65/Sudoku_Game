@@ -18,9 +18,10 @@ export default function SudokuGamePage() {
   const [selectedCell, setSelectedCell] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   // eslint-disable-next-line no-unused-vars
-  const [gameSsessionId, setGameSessionId] = useState(null);
+  const [gameSessionId, setGameSessionId] = useState(null);
   const [givenBoard, setGivenBoard] = useState([]);
   const [invalidCells, setInvalidCells] = useState([]);
+  const [hasWon, setHasWon] = useState(false);
 
   function getInvalidCells(board) {
     const invalid = [];
@@ -108,6 +109,34 @@ export default function SudokuGamePage() {
     return invalid;
   }
 
+  function isBoardComplete(board) {
+    return board.every((row) => row.every((cell) => cell !== ""));
+  }
+
+function getNumberCounts(board) {
+  const counts = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+  };
+
+  board.forEach((row) => {
+    row.forEach((cell) => {
+      if (cell >= 1 && cell <= 9) {
+        counts[cell] += 1;
+      }
+    });
+  });
+
+  return counts;
+}
+
   useEffect(() => {
     function handleKeyDown(event) {
       if (!selectedCell) return;
@@ -145,6 +174,14 @@ export default function SudokuGamePage() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedCell, givenBoard]);
+
+  useEffect(() => {
+    const boardComplete = isBoardComplete(playerBoard);
+    const boardValid = invalidCells.length === 0;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasWon(boardComplete && boardValid);
+  }, [playerBoard, invalidCells]);
 
   async function handleStartGame() {
     const difficultyToPuzzleId = {
@@ -187,10 +224,13 @@ export default function SudokuGamePage() {
       setGivenBoard(normalizedGivenBoard);
       setInvalidCells(getInvalidCells(normalizedBoard));
       setSelectedCell(null);
+      setHasWon(false);
     } catch (error) {
       console.error("Error starting game:", error);
     }
   }
+
+const numberCounts = getNumberCounts(playerBoard);
 
   return (
     <main className="game-page">
@@ -210,8 +250,24 @@ export default function SudokuGamePage() {
           setSelectedCell={setSelectedCell}
           invalidCells={invalidCells}
         />
-      </section>
+      
 
+      <div className="number-tracker">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
+        <span
+          key={number}
+          className={
+            numberCounts[number] === 9
+              ? "tracker-number complete"
+              : "tracker-number"
+          }
+        >
+            {number}
+          </span>
+        ))}
+      </div>
+    </section>
+    
       <section className="control-panel">
         <h2>Game Controls</h2>
 
@@ -233,6 +289,8 @@ export default function SudokuGamePage() {
         <button className="start-btn" onClick={handleStartGame}>
           Start Game
         </button>
+
+        {hasWon && <p className="win-message">Puzzle solved!</p>}
       </section>
 
       <section className="side-panel">
