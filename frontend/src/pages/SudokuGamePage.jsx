@@ -17,7 +17,6 @@ export default function SudokuGamePage() {
 
   const [selectedCell, setSelectedCell] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
-  // eslint-disable-next-line no-unused-vars
   const [gameSessionId, setGameSessionId] = useState(null);
   const [givenBoard, setGivenBoard] = useState([]);
   const [invalidCells, setInvalidCells] = useState([]);
