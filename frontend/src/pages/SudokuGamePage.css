@@ -121,12 +121,100 @@
   color: #b3261e;
 }
 
+/* win message */
 .win-message {
   font-weight: 700;
-  font-size: 1rem;
-  color: #2e7d32;
+  font-size: 1.1rem;
   text-align: center;
+  margin-top: 0.5rem;
+
+  background: linear-gradient(
+    135deg,
+    #e4a0bd,
+    #bea77e,
+    #b7af80,
+    #87ae7c,
+    #7d94a8,
+    #a897c8,
+    #bf8ca1
+  );
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  animation:
+    pastel-rainbow-shift 4s ease-in-out infinite,
+    win-fade-up 0.5s ease-out;
 }
+
+@keyframes pastel-rainbow-shift {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes win-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sudoku-board {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: 540px;
+  height: 540px;
+  border: 3px solid #444;
+  background-color: #f8f8f8;
+}
+
+.sudoku-board.win-active {
+  background: linear-gradient(
+    135deg,
+    #ffd6e7,
+    #ffe3b3,
+    #fff5ba,
+    #d8f5d0,
+    #d6ecff,
+    #e4d7ff,
+    #ffd6e7
+  );
+
+  background-size: 300% 300%;
+
+  animation: grid-rainbow-flow 6s ease-in-out infinite;
+}
+
+@keyframes grid-rainbow-flow {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/*   */
+
+
+
 
 .number-tracker {
   display: flex;

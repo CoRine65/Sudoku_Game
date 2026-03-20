@@ -22,6 +22,7 @@ export default function SudokuGamePage() {
   const [givenBoard, setGivenBoard] = useState([]);
   const [invalidCells, setInvalidCells] = useState([]);
   const [hasWon, setHasWon] = useState(false);
+  const [secondsElapsed, setSecondsElapsed] = useState(0);
 
   function getInvalidCells(board) {
     const invalid = [];
@@ -183,6 +184,18 @@ function getNumberCounts(board) {
     setHasWon(boardComplete && boardValid);
   }, [playerBoard, invalidCells]);
 
+  useEffect(() => {
+  if (!gameSessionId || hasWon) return;
+
+  const intervalId = setInterval(() => {
+    setSecondsElapsed((prevSeconds) => prevSeconds + 1);
+  }, 1000);
+
+  return () => {
+    clearInterval(intervalId);
+  };
+}, [gameSessionId, hasWon]);
+
   async function handleStartGame() {
     const difficultyToPuzzleId = {
       easy: 1,
@@ -225,12 +238,17 @@ function getNumberCounts(board) {
       setInvalidCells(getInvalidCells(normalizedBoard));
       setSelectedCell(null);
       setHasWon(false);
+      setSecondsElapsed(0);
     } catch (error) {
       console.error("Error starting game:", error);
     }
   }
 
 const numberCounts = getNumberCounts(playerBoard);
+const minutes = String(Math.floor(secondsElapsed / 60)).padStart(2, "0");
+const seconds = String(secondsElapsed % 60).padStart(2, "0");
+const formattedTime = `${minutes}:${seconds}`;
+
 
   return (
     <main className="game-page">
@@ -238,7 +256,7 @@ const numberCounts = getNumberCounts(playerBoard);
         <div className="panel-header">
           <h2>Player</h2>
           <div className="panel-stats">
-            <span>⏱ 00:00</span>
+            <span>⏱ {formattedTime}</span>
             <span>Wins: 0</span>
           </div>
         </div>
@@ -249,6 +267,7 @@ const numberCounts = getNumberCounts(playerBoard);
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
           invalidCells={invalidCells}
+          hasWon={hasWon}
         />
       
 

@@ -2,6 +2,7 @@ export default function SudokuBoard({
   board,
   selectedCell,
   setSelectedCell,
+  hasWon,
   givenBoard = [],
   invalidCells = [],
 }) {
@@ -62,7 +63,7 @@ export default function SudokuBoard({
   });
 
   return (
-    <div className="sudoku-board">
+    <div className={`sudoku-board ${hasWon ? "win-active" : ""}`}>
       {cells.map((cell) => (
         <div
           key={cell.index}
