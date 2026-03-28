@@ -70,8 +70,10 @@
 /* Sudoku board */
 
 .sudoku-board {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
   width: 540px;
   height: 540px;
   border: 3px solid #444;
@@ -170,16 +172,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.sudoku-board {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  width: 540px;
-  height: 540px;
-  border: 3px solid #444;
-  background-color: #f8f8f8;
 }
 
 .sudoku-board.win-active {

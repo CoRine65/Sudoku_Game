@@ -16,23 +16,29 @@ class GameSessionsController < ApplicationController
     render json: show_payload(@game_session)
   end
 
-  def create
-    puzzle = Puzzle.find(params.require(:puzzle_id))
-    user = current_user || User.first
+def create
+  difficulty = params.require(:difficulty)
+  puzzle = Puzzle.find_by(difficulty: difficulty)
+  user = current_user || User.first
 
-    unless user
-      render json: { error: "No user available to create game session." }, status: :unprocessable_entity
-      return
-    end
-
-    game_session = user.game_sessions.create!(
-      puzzle: puzzle,
-      status: "in_progress",
-      current_board: puzzle.given_board
-    )
-
-    render json: show_payload(game_session), status: :created
+  unless puzzle
+    render json: { error: "No puzzle found for difficulty: #{difficulty}" }, status: :not_found
+    return
   end
+
+  unless user
+    render json: { error: "No user available to create game session." }, status: :unprocessable_entity
+    return
+  end
+
+  game_session = user.game_sessions.create!(
+    puzzle: puzzle,
+    status: "in_progress",
+    current_board: puzzle.given_board
+  )
+
+  render json: show_payload(game_session), status: :created
+end
 
   def update
     @game_session.update!(update_params)

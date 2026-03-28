@@ -196,52 +196,64 @@ function getNumberCounts(board) {
 }, [gameSessionId, hasWon]);
 
   async function handleStartGame() {
-    const difficultyToPuzzleId = {
-      easy: 1,
-      medium: 2,
-    };
-
-    const puzzleId = difficultyToPuzzleId[selectedDifficulty];
-
-    if (!puzzleId) {
-      alert("Please choose a difficulty first.");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:3000/game_sessions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          puzzle_id: puzzleId,
-        }),
-      });
-
-      const data = await response.json();
-
-      const normalizedBoard = data.current_board.map((row) =>
-        row.map((cell) => cell ?? "")
-      );
-
-      const normalizedGivenBoard = data.puzzle.given_board.map((row) =>
-        row.map((cell) => cell ?? "")
-      );
-
-      setGameSessionId(data.id);
-      setPlayerBoard(normalizedBoard);
-      setGivenBoard(normalizedGivenBoard);
-      setInvalidCells(getInvalidCells(normalizedBoard));
-      setSelectedCell(null);
-      setHasWon(false);
-      setSecondsElapsed(0);
-    } catch (error) {
-      console.error("Error starting game:", error);
-    }
+  if (!selectedDifficulty) {
+    alert("Please choose a difficulty first.");
+    return;
   }
+
+  try {
+    const response = await fetch("http://localhost:3000/game_sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        difficulty: selectedDifficulty,
+      }),
+    });
+
+    const data = await response.json();
+
+    const normalizedBoard = data.current_board.map((row) => {
+      const filledRow = row.map((cell) => cell ?? "");
+
+      while (filledRow.length < 9) {
+        filledRow.push("");
+      }
+
+      return filledRow;
+    });
+
+    const normalizedGivenBoard = data.puzzle.given_board.map((row) => {
+      const filledRow = row.map((cell) => cell ?? "");
+
+      while (filledRow.length < 9) {
+        filledRow.push("");
+      }
+
+      return filledRow;
+    });
+
+    console.log("normalizedBoard:", normalizedBoard);
+console.log(
+  "row lengths:",
+  normalizedBoard.map((row) => row.length)
+);
+console.log("board row count:", normalizedBoard.length);
+
+    setGameSessionId(data.id);
+    setPlayerBoard(normalizedBoard);
+    setGivenBoard(normalizedGivenBoard);
+    setInvalidCells(getInvalidCells(normalizedBoard));
+    setSelectedCell(null);
+    setHasWon(false);
+    setSecondsElapsed(0);
+  } catch (error) {
+    console.error("Error starting game:", error);
+  }
+}
 
 const numberCounts = getNumberCounts(playerBoard);
 const minutes = String(Math.floor(secondsElapsed / 60)).padStart(2, "0");
