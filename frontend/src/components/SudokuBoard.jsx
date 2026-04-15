@@ -5,6 +5,7 @@ export default function SudokuBoard({
   hasWon,
   givenBoard = [],
   invalidCells = [],
+  isInteractive = true,
 }) {
   const selectedRow = selectedCell?.row ?? null;
   const selectedCol = selectedCell?.col ?? null;
@@ -69,6 +70,7 @@ export default function SudokuBoard({
           key={cell.index}
           className={cell.classes}
           onClick={() => {
+            if (!isInteractive) return;
             setSelectedCell?.({ row: cell.row, col: cell.col });
           }}
         >

@@ -15,6 +15,18 @@ export default function SudokuGamePage() {
     ["", "", "", "", 8, "", "", 7, 9],
   ]);
 
+  const [computerBoard, setComputerBoard] = useState([
+  [5, 3, "", "", 7, "", "", "", ""],
+  [6, "", "", 1, 9, 5, "", "", ""],
+  ["", 9, 8, "", "", "", "", 6, ""],
+  [8, "", "", "", 6, "", "", "", 3],
+  [4, "", "", 8, "", 3, "", "", 1],
+  [7, "", "", "", 2, "", "", "", 6],
+  ["", 6, "", "", "", "", 2, 8, ""],
+  ["", "", "", 4, 1, 9, "", "", 5],
+  ["", "", "", "", 8, "", "", 7, 9],
+  ]);
+
   const [selectedCell, setSelectedCell] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [gameSessionId, setGameSessionId] = useState(null);
@@ -245,6 +257,7 @@ console.log("board row count:", normalizedBoard.length);
 
     setGameSessionId(data.id);
     setPlayerBoard(normalizedBoard);
+    setComputerBoard(normalizedBoard.map((row) => [...row]));
     setGivenBoard(normalizedGivenBoard);
     setInvalidCells(getInvalidCells(normalizedBoard));
     setSelectedCell(null);
@@ -332,7 +345,14 @@ const formattedTime = `${minutes}:${seconds}`;
           </div>
         </div>
 
-        <SudokuBoard />
+        <SudokuBoard 
+          board={computerBoard}
+          givenBoard={givenBoard}
+          selectedCell={null}
+          setSelectedCell={() => {}}
+          invalidCells={[]}
+          isInteractive={false}
+        />
       </section>
     </main>
   );
