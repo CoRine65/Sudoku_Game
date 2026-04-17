@@ -68,17 +68,18 @@ end
   end
 
   def show_payload(session)
-    {
-      id: session.id,
-      status: session.status,
-      created_at: session.created_at,
-      updated_at: session.updated_at,
-      puzzle: {
-        id: session.puzzle_id,
-        difficulty: session.puzzle.difficulty,
-        given_board: session.puzzle.given_board
-      },
-      current_board: session.current_board
-    }
+  {
+    id: session.id,
+    status: session.status,
+    created_at: session.created_at,
+    updated_at: session.updated_at,
+    puzzle: {
+      id: session.puzzle_id,
+      difficulty: session.puzzle.difficulty,
+      given_board: session.puzzle.given_board,
+      solution_board: session.puzzle.solution_board
+    },
+    current_board: session.current_board
+  }
   end
 end

@@ -34,6 +34,9 @@ export default function SudokuGamePage() {
   const [invalidCells, setInvalidCells] = useState([]);
   const [hasWon, setHasWon] = useState(false);
   const [secondsElapsed, setSecondsElapsed] = useState(0);
+  //
+  const [isGameActive, setIsGameActive] = useState(false);
+  const [solutionBoard, setSolutionBoard] = useState([]);
 
   function getInvalidCells(board) {
     const invalid = [];
@@ -207,6 +210,38 @@ function getNumberCounts(board) {
   };
 }, [gameSessionId, hasWon]);
 
+useEffect(() => {
+  if (!isGameActive || hasWon || solutionBoard.length === 0) return;
+
+  const intervalId = setInterval(() => {
+    setComputerBoard((prevBoard) => {
+      const newBoard = prevBoard.map((row) => [...row]);
+
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (newBoard[row][col] === "") {
+            newBoard[row][col] = solutionBoard[row][col];
+            return newBoard;
+          }
+        }
+      }
+
+      return newBoard;
+    });
+  }, 2000);
+
+  return () => {
+    clearInterval(intervalId);
+  };
+}, [isGameActive, hasWon, solutionBoard]);
+
+useEffect(() => {
+  if (!hasWon) return;
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  setIsGameActive(false);
+}, [hasWon]);
+
+
   async function handleStartGame() {
   if (!selectedDifficulty) {
     alert("Please choose a difficulty first.");
@@ -247,7 +282,17 @@ function getNumberCounts(board) {
 
       return filledRow;
     });
+  
+    console.log("full puzzle data:", data.puzzle);
+  const normalizedSolutionBoard = data.puzzle.solution_board?.map((row) => {
+  const filledRow = row.map((cell) => cell ?? "");
 
+  while (filledRow.length < 9) {
+    filledRow.push("");
+  }
+
+  return filledRow;
+}) || [];
     console.log("normalizedBoard:", normalizedBoard);
 console.log(
   "row lengths:",
@@ -256,13 +301,16 @@ console.log(
 console.log("board row count:", normalizedBoard.length);
 
     setGameSessionId(data.id);
-    setPlayerBoard(normalizedBoard);
+    setPlayerBoard(normalizedBoard.map((row) => [...row]));
     setComputerBoard(normalizedBoard.map((row) => [...row]));
     setGivenBoard(normalizedGivenBoard);
     setInvalidCells(getInvalidCells(normalizedBoard));
     setSelectedCell(null);
     setHasWon(false);
     setSecondsElapsed(0);
+    setIsGameActive(true);
+    setSolutionBoard(normalizedSolutionBoard);
+
   } catch (error) {
     console.error("Error starting game:", error);
   }
