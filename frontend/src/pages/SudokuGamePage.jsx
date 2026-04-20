@@ -33,6 +33,7 @@ export default function SudokuGamePage() {
   const [givenBoard, setGivenBoard] = useState([]);
   const [invalidCells, setInvalidCells] = useState([]);
   const [hasWon, setHasWon] = useState(false);
+  const [computerHasWon, setComputerHasWon] = useState(false);
   const [secondsElapsed, setSecondsElapsed] = useState(0);
   //
   const [isGameActive, setIsGameActive] = useState(false);
@@ -216,15 +217,23 @@ useEffect(() => {
   const intervalId = setInterval(() => {
     setComputerBoard((prevBoard) => {
       const newBoard = prevBoard.map((row) => [...row]);
+      const emptyCells = [];
 
       for (let row = 0; row < 9; row++) {
         for (let col = 0; col < 9; col++) {
           if (newBoard[row][col] === "") {
-            newBoard[row][col] = solutionBoard[row][col];
-            return newBoard;
+            emptyCells.push({ row, col });
           }
         }
       }
+
+      if (emptyCells.length === 0) return newBoard;
+
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      const chosenCell = emptyCells[randomIndex];
+
+      newBoard[chosenCell.row][chosenCell.col] =
+        solutionBoard[chosenCell.row][chosenCell.col];
 
       return newBoard;
     });
@@ -235,11 +244,19 @@ useEffect(() => {
   };
 }, [isGameActive, hasWon, solutionBoard]);
 
+
 useEffect(() => {
-  if (!hasWon) return;
-  // eslint-disable-next-line react-hooks/set-state-in-effect
+  const boardComplete = isBoardComplete(computerBoard);
+  const computerInvalidCells = getInvalidCells(computerBoard);
+  const boardValid = computerInvalidCells.length === 0;
+
+  setComputerHasWon(boardComplete && boardValid);
+}, [computerBoard]);
+
+useEffect(() => {
+  if (!hasWon && !computerHasWon) return;
   setIsGameActive(false);
-}, [hasWon]);
+}, [hasWon, computerHasWon]);
 
 
   async function handleStartGame() {
@@ -310,6 +327,9 @@ console.log("board row count:", normalizedBoard.length);
     setSecondsElapsed(0);
     setIsGameActive(true);
     setSolutionBoard(normalizedSolutionBoard);
+    setComputerHasWon(false);
+    
+    
 
   } catch (error) {
     console.error("Error starting game:", error);
@@ -399,6 +419,7 @@ const formattedTime = `${minutes}:${seconds}`;
           selectedCell={null}
           setSelectedCell={() => {}}
           invalidCells={[]}
+          hasWon={computerHasWon}
           isInteractive={false}
         />
       </section>
