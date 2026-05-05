@@ -451,6 +451,7 @@ const formattedComputerTime = `${computerMinutes}:${computerSeconds}`;
           invalidCells={[]}
           hasWon={computerHasWon}
           isInteractive={false}
+          hideNonGivenValues={isGameActive && !winner}
         />
       </section>
     </main>

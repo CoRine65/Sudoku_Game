@@ -6,6 +6,7 @@ export default function SudokuBoard({
   givenBoard = [],
   invalidCells = [],
   isInteractive = true,
+  hideNonGivenValues= false,
 }) {
   const selectedRow = selectedCell?.row ?? null;
   const selectedCol = selectedCell?.col ?? null;
@@ -21,6 +22,12 @@ export default function SudokuBoard({
 
     const isGiven =
       givenBoard?.[row]?.[col] !== "" && givenBoard?.[row]?.[col] != null;
+
+    const shouldHideValue = hideNonGivenValues && !isGiven && value !== "";
+    const displayValue = shouldHideValue ? "" : value;
+    const pastelClass = shouldHideValue
+      ? `pastel-${(index * 7 + 3) % 6}`
+      : "";  
 
     const isSelected = selectedRow === row && selectedCol === col;
 
@@ -51,6 +58,8 @@ export default function SudokuBoard({
       isSameValue ? "same-value" : "",
       isSelected ? "selected" : "",
       isInvalid ? "invalid" : "",
+      shouldHideValue ? "hidden-computer-value" : "",
+      pastelClass,
     ].join(" ");
 
     return {
@@ -60,6 +69,7 @@ export default function SudokuBoard({
       value,
       isGiven,
       classes,
+      displayValue,
     };
   });
 
@@ -74,7 +84,7 @@ export default function SudokuBoard({
             setSelectedCell?.({ row: cell.row, col: cell.col });
           }}
         >
-          {cell.value}
+          {cell.displayValue}
         </div>
       ))}
     </div>

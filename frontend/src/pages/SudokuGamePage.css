@@ -227,3 +227,53 @@
   text-decoration: line-through;
   opacity: 0.7;
 }
+
+/*random color for cell block*/
+/*
+.hidden-computer-value {
+  border: none;
+  color: transparent;
+}
+
+.hidden-computer-value {
+  color: transparent;
+  animation: pastel-cycle 6s ease-in-out infinite;
+} 
+
+@keyframes pastel-cycle {
+  0%   { background-color: #ffd6e7; } 
+  16%  { background-color: #ffe3b3; } 
+  33%  { background-color: #fff5ba; } 
+  50%  { background-color: #d8f5d0; } 
+  66%  { background-color: #d6ecff; } 
+  83%  { background-color: #e4d7ff; } 
+  100% { background-color: #ffd6e7; }
+}; */
+
+.hidden-computer-value {
+  color: transparent;
+}
+
+.pastel-0 {
+  background-color: #ffd6e7;
+}
+
+.pastel-1 {
+  background-color: #ffe3b3;
+}
+
+.pastel-2 {
+  background-color: #fff5ba;
+}
+
+.pastel-3 {
+  background-color: #d8f5d0;
+}
+
+.pastel-4 {
+  background-color: #d6ecff;
+}
+
+.pastel-5 {
+  background-color: #e4d7ff;
+}
