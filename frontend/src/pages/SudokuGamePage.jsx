@@ -165,6 +165,13 @@ export default function SudokuGamePage() {
     return counts;
   }
 
+  function getComputerMoveDelay(difficulty) {
+    if (difficulty === "easy") return 3000;
+    if (difficulty === "medium") return 2000;
+    if (difficulty === "hard") return 1200;
+    return 2000;
+  }
+
   // Player keyboard input
   useEffect(() => {
     function handleKeyDown(event) {
@@ -270,12 +277,12 @@ export default function SudokuGamePage() {
 
         return newBoard;
       });
-    }, 2000);
+    }, getComputerMoveDelay(selectedDifficulty))
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [isGameActive, winner, solutionBoard]);
+  }, [isGameActive, winner, solutionBoard, selectedDifficulty]);
 
   // Computer win detection
   useEffect(() => {
