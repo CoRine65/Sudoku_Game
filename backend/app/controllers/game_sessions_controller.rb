@@ -18,7 +18,7 @@ class GameSessionsController < ApplicationController
 
 def create
   difficulty = params.require(:difficulty)
-  puzzle = Puzzle.find_by(difficulty: difficulty)
+  puzzle = puzzle = Puzzle.where(difficulty: difficulty).order("RANDOM()").first
   user = current_user || User.first
 
   unless puzzle
