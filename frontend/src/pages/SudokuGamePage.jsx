@@ -56,7 +56,7 @@ export default function SudokuGamePage() {
 
     function markInvalid(row, col) {
       const alreadyMarked = invalid.some(
-        (cell) => cell.row === row && cell.col === col
+        (cell) => cell.row === row && cell.col === col,
       );
 
       if (!alreadyMarked) {
@@ -239,16 +239,16 @@ export default function SudokuGamePage() {
   }, [gameSessionId, winner]);
 
   useEffect(() => {
-  if (!isGameActive || winner) return;
+    if (!isGameActive || winner) return;
 
-  const intervalId = setInterval(() => {
-    setComputerSecondsElapsed((prevSeconds) => prevSeconds + 1);
-  }, 1000);
+    const intervalId = setInterval(() => {
+      setComputerSecondsElapsed((prevSeconds) => prevSeconds + 1);
+    }, 1000);
 
-  return () => {
-    clearInterval(intervalId);
-  };
-}, [isGameActive, winner]);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isGameActive, winner]);
 
   // Computer move loop
   useEffect(() => {
@@ -277,7 +277,7 @@ export default function SudokuGamePage() {
 
         return newBoard;
       });
-    }, getComputerMoveDelay(selectedDifficulty))
+    }, getComputerMoveDelay(selectedDifficulty));
 
     return () => {
       clearInterval(intervalId);
@@ -344,7 +344,7 @@ export default function SudokuGamePage() {
       console.log("normalizedBoard:", normalizedBoard);
       console.log(
         "row lengths:",
-        normalizedBoard.map((row) => row.length)
+        normalizedBoard.map((row) => row.length),
       );
       console.log("board row count:", normalizedBoard.length);
 
@@ -372,12 +372,12 @@ export default function SudokuGamePage() {
   const seconds = String(secondsElapsed % 60).padStart(2, "0");
   const formattedTime = `${minutes}:${seconds}`;
   const computerMinutes = String(
-  Math.floor(computerSecondsElapsed / 60)
-).padStart(2, "0");
+    Math.floor(computerSecondsElapsed / 60),
+  ).padStart(2, "0");
 
-const computerSeconds = String(computerSecondsElapsed % 60).padStart(2, "0");
+  const computerSeconds = String(computerSecondsElapsed % 60).padStart(2, "0");
 
-const formattedComputerTime = `${computerMinutes}:${computerSeconds}`;
+  const formattedComputerTime = `${computerMinutes}:${computerSeconds}`;
 
   return (
     <main className="game-page">

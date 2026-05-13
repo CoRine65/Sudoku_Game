@@ -6,13 +6,13 @@ export default function SudokuBoard({
   givenBoard = [],
   invalidCells = [],
   isInteractive = true,
-  hideNonGivenValues= false,
+  hideNonGivenValues = false,
 }) {
   const selectedRow = selectedCell?.row ?? null;
   const selectedCol = selectedCell?.col ?? null;
   const selectedValue =
     selectedRow !== null && selectedCol !== null
-      ? board?.[selectedRow]?.[selectedCol] ?? ""
+      ? (board?.[selectedRow]?.[selectedCol] ?? "")
       : "";
 
   const cells = Array.from({ length: 81 }, (_, index) => {
@@ -25,9 +25,7 @@ export default function SudokuBoard({
 
     const shouldHideValue = hideNonGivenValues && !isGiven && value !== "";
     const displayValue = shouldHideValue ? "" : value;
-    const pastelClass = shouldHideValue
-      ? `pastel-${(index * 7 + 3) % 6}`
-      : "";  
+    const pastelClass = shouldHideValue ? `pastel-${(index * 7 + 3) % 6}` : "";
 
     const isSelected = selectedRow === row && selectedCol === col;
 
@@ -46,13 +44,13 @@ export default function SudokuBoard({
       selectedValue !== "" && !isSelected && value === selectedValue;
 
     const isInvalid = invalidCells.some(
-      (cell) => cell.row === row && cell.col === col
+      (cell) => cell.row === row && cell.col === col,
     );
 
     const classes = [
       "cell",
-      col % 3 === 0 ? "thick-left" : "",
-      row % 3 === 0 ? "thick-top" : "",
+      col !== 0 && col % 3 === 0 ? "thick-left" : "",
+      row !== 0 && row % 3 === 0 ? "thick-top" : "",
       isGiven ? "given" : "",
       isRelated ? "highlighted" : "",
       isSameValue ? "same-value" : "",
